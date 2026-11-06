@@ -9,15 +9,35 @@
 <body>
   <div id="app">
     <h1>{{ sitename }}</h1>
+
+    <div v-for="lesson in lessons">
+      <h2>{{ lesson.topic }}</h2>
+      <p>{{ lesson.location }}</p>
+      <p>Price: £{{ lesson.price }}</p>
+      <p>Spaces: {{ lesson.space }}</p>
+    </div>
   </div>
 
   <script type="module">
     const { createApp } = Vue
 
+    const SERVER_URL = "https://backend-server-m01031178.onrender.com"
+
     const myApp = createApp({
       data() {
         return {
-          sitename: "After School Club"
+          sitename: "After School Club",
+          lessons: []
+        }
+      },
+      created() {
+        this.fetchLessons()
+      },
+      methods: {
+        async fetchLessons() {
+          const url = SERVER_URL + "/lessons"
+          let response = await fetch(url)
+          this.lessons = await response.json()
         }
       }
     })
