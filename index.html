@@ -14,28 +14,35 @@
       Cart ({{ cartItemCount }})
     </button>
 
-    <p>
-      Sort by:
-      <select v-model="sortBy">
-        <option value="topic">Subject</option>
-        <option value="location">Location</option>
-        <option value="price">Price</option>
-        <option value="space">Spaces</option>
-      </select>
+    <div v-if="!showCart">
+      <p>
+        Sort by:
+        <select v-model="sortBy">
+          <option value="topic">Subject</option>
+          <option value="location">Location</option>
+          <option value="price">Price</option>
+          <option value="space">Spaces</option>
+        </select>
 
-      <select v-model="sortOrder">
-        <option value="ascending">Ascending</option>
-        <option value="descending">Descending</option>
-      </select>
-    </p>
+        <select v-model="sortOrder">
+          <option value="ascending">Ascending</option>
+          <option value="descending">Descending</option>
+        </select>
+      </p>
 
-    <div v-for="lesson in sortedLessons">
-      <img v-bind:src="imageAddress(lesson)" width="100" v-bind:alt="lesson.topic">
-      <h2>{{ lesson.topic }}</h2>
-      <p>{{ lesson.location }}</p>
-      <p>Price: £{{ lesson.price }}</p>
-      <p>Spaces: {{ lesson.space }}</p>
-      <button v-on:click="addToCart(lesson)" v-bind:disabled="!canAddToCart(lesson)">Add to cart</button>
+      <div v-for="lesson in sortedLessons">
+        <img v-bind:src="imageAddress(lesson)" width="100" v-bind:alt="lesson.topic">
+        <h2>{{ lesson.topic }}</h2>
+        <p>{{ lesson.location }}</p>
+        <p>Price: £{{ lesson.price }}</p>
+        <p>Spaces: {{ lesson.space }}</p>
+        <button v-on:click="addToCart(lesson)" v-bind:disabled="!canAddToCart(lesson)">Add to cart</button>
+      </div>
+    </div>
+
+    <div v-if="showCart">
+      <h2>Shopping cart</h2>
+      <p>You have {{ cartItemCount }} space(s) in your cart.</p>
     </div>
   </div>
 
