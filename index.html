@@ -42,7 +42,13 @@
 
     <div v-if="showCart">
       <h2>Shopping cart</h2>
-      <p>You have {{ cartItemCount }} space(s) in your cart.</p>
+
+      <div v-for="lesson in lessons">
+        <div v-if="cartCount(lesson) > 0">
+          <h3>{{ lesson.topic }} - {{ lesson.location }}</h3>
+          <p>Price: £{{ lesson.price }} x {{ cartCount(lesson) }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -103,6 +109,15 @@
         },
         canAddToCart(lesson) {
           return lesson.space > 0
+        },
+        cartCount(lesson) {
+          let count = 0
+          for (let i = 0; i < this.cart.length; i++) {
+            if (this.cart[i] === lesson._id) {
+              count++
+            }
+          }
+          return count
         }
       }
     })
