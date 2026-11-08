@@ -10,19 +10,19 @@
   <div id="app">
     <h1>{{ sitename }}</h1>
     <p>
-  Sort by:
-  <select v-model="sortBy">
-    <option value="topic">Subject</option>
-    <option value="location">Location</option>
-    <option value="price">Price</option>
-    <option value="space">Spaces</option>
-  </select>
+      Sort by:
+      <select v-model="sortBy">
+        <option value="topic">Subject</option>
+        <option value="location">Location</option>
+        <option value="price">Price</option>
+        <option value="space">Spaces</option>
+      </select>
 
-  <select v-model="sortOrder">
-    <option value="ascending">Ascending</option>
-    <option value="descending">Descending</option>
-  </select>
-</p>
+      <select v-model="sortOrder">
+        <option value="ascending">Ascending</option>
+        <option value="descending">Descending</option>
+      </select>
+    </p>
 
     <div v-for="lesson in sortedLessons">
       <img v-bind:src="imageAddress(lesson)" width="100" v-bind:alt="lesson.topic">
@@ -40,34 +40,35 @@
 
     const myApp = createApp({
       data() {
-  return {
-    sitename: "After School Club",
-    lessons: [],
-    sortBy: "topic",
-    sortOrder: "ascending"
-  }
-},
+        return {
+          sitename: "After School Club",
+          lessons: [],
+          sortBy: "topic",
+          sortOrder: "ascending",
+          cart: []
+        }
+      },
       created() {
         this.fetchLessons()
       },
       computed: {
-  sortedLessons() {
-    const attribute = this.sortBy
-    const order = this.sortOrder
+        sortedLessons() {
+          const attribute = this.sortBy
+          const order = this.sortOrder
 
-    function compare(a, b) {
-      if (a[attribute] > b[attribute]) return 1
-      if (a[attribute] < b[attribute]) return -1
-      return 0
-    }
+          function compare(a, b) {
+            if (a[attribute] > b[attribute]) return 1
+            if (a[attribute] < b[attribute]) return -1
+            return 0
+          }
 
-    let sorted = this.lessons.slice().sort(compare)
-    if (order === "descending") {
-      sorted.reverse()
-    }
-    return sorted
-  }
-},
+          let sorted = this.lessons.slice().sort(compare)
+          if (order === "descending") {
+            sorted.reverse()
+          }
+          return sorted
+        }
+      },
       methods: {
         async fetchLessons() {
           const url = SERVER_URL + "/lessons"
@@ -76,6 +77,15 @@
         },
         imageAddress(lesson) {
           return SERVER_URL + "/images/" + lesson.image
+        },
+        addToCart(lesson) {
+          if (this.canAddToCart(lesson)) {
+            this.cart.push(lesson._id)
+            lesson.space--
+          }
+        },
+        canAddToCart(lesson) {
+          return lesson.space > 0
         }
       }
     })
