@@ -30,6 +30,7 @@
       <p>{{ lesson.location }}</p>
       <p>Price: £{{ lesson.price }}</p>
       <p>Spaces: {{ lesson.space }}</p>
+      <button v-on:click="addToCart(lesson)" v-bind:disabled="!canAddToCart(lesson)">Add to cart</button>
     </div>
   </div>
 
