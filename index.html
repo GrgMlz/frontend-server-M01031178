@@ -50,6 +50,13 @@
           <button v-on:click="removeFromCart(lesson)">Remove</button>
         </div>
       </div>
+
+      <h2>Checkout</h2>
+      <p>Name: <input v-model="order.name"></p>
+      <p v-if="order.name !== '' && !validName">The name must contain letters only.</p>
+      <p>Phone: <input v-model="order.phone"></p>
+      <p v-if="order.phone !== '' && !validPhone">The phone must contain numbers only.</p>
+      <button v-bind:disabled="!canCheckout">Checkout</button>
     </div>
   </div>
 
@@ -66,7 +73,11 @@
           sortBy: "topic",
           sortOrder: "ascending",
           cart: [],
-          showCart: false
+          showCart: false,
+          order: {
+            name: "",
+            phone: ""
+          }
         }
       },
       created() {
@@ -91,6 +102,15 @@
         },
         cartItemCount() {
           return this.cart.length
+        },
+        validName() {
+          return /^[A-Za-z ]+$/.test(this.order.name)
+        },
+        validPhone() {
+          return /^[0-9]+$/.test(this.order.phone)
+        },
+        canCheckout() {
+          return this.validName && this.validPhone
         }
       },
       methods: {
