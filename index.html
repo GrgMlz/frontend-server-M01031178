@@ -9,6 +9,11 @@
 <body>
   <div id="app">
     <h1>{{ sitename }}</h1>
+
+    <button v-on:click="showCart = !showCart" v-bind:disabled="cartItemCount === 0">
+      Cart ({{ cartItemCount }})
+    </button>
+
     <p>
       Sort by:
       <select v-model="sortBy">
@@ -46,7 +51,8 @@
           lessons: [],
           sortBy: "topic",
           sortOrder: "ascending",
-          cart: []
+          cart: [],
+          showCart: false
         }
       },
       created() {
@@ -68,6 +74,9 @@
             sorted.reverse()
           }
           return sorted
+        },
+        cartItemCount() {
+          return this.cart.length
         }
       },
       methods: {
