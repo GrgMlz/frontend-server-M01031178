@@ -169,13 +169,31 @@
             },
             body: JSON.stringify(newOrder)
           }
-          let response = await fetch(url, options)
+          await fetch(url, options)
+
+          for (let i = 0; i < this.lessons.length; i++) {
+            const lesson = this.lessons[i]
+            if (this.cartCount(lesson) > 0) {
+              await this.updateSpaces(lesson)
+            }
+          }
 
           this.confirmationMessage = "Order submitted! Thank you, " + this.order.name + "."
           this.cart = []
           this.order.name = ""
           this.order.phone = ""
           this.showCart = false
+        },
+        async updateSpaces(lesson) {
+          const url = SERVER_URL + "/lessons/" + lesson._id
+          const options = {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ space: lesson.space })
+          }
+          await fetch(url, options)
         }
       }
     })
