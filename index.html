@@ -9,8 +9,22 @@
 <body>
   <div id="app">
     <h1>{{ sitename }}</h1>
+    <p>
+  Sort by:
+  <select v-model="sortBy">
+    <option value="topic">Subject</option>
+    <option value="location">Location</option>
+    <option value="price">Price</option>
+    <option value="space">Spaces</option>
+  </select>
 
-    <div v-for="lesson in lessons">
+  <select v-model="sortOrder">
+    <option value="ascending">Ascending</option>
+    <option value="descending">Descending</option>
+  </select>
+</p>
+
+    <div v-for="lesson in sortedLessons">
       <img v-bind:src="imageAddress(lesson)" width="100" v-bind:alt="lesson.topic">
       <h2>{{ lesson.topic }}</h2>
       <p>{{ lesson.location }}</p>
@@ -26,14 +40,34 @@
 
     const myApp = createApp({
       data() {
-        return {
-          sitename: "After School Club",
-          lessons: []
-        }
-      },
+  return {
+    sitename: "After School Club",
+    lessons: [],
+    sortBy: "topic",
+    sortOrder: "ascending"
+  }
+},
       created() {
         this.fetchLessons()
       },
+      computed: {
+  sortedLessons() {
+    const attribute = this.sortBy
+    const order = this.sortOrder
+
+    function compare(a, b) {
+      if (a[attribute] > b[attribute]) return 1
+      if (a[attribute] < b[attribute]) return -1
+      return 0
+    }
+
+    let sorted = this.lessons.slice().sort(compare)
+    if (order === "descending") {
+      sorted.reverse()
+    }
+    return sorted
+  }
+},
       methods: {
         async fetchLessons() {
           const url = SERVER_URL + "/lessons"
