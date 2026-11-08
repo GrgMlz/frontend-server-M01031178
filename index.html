@@ -47,6 +47,7 @@
         <div v-if="cartCount(lesson) > 0">
           <h3>{{ lesson.topic }} - {{ lesson.location }}</h3>
           <p>Price: £{{ lesson.price }} x {{ cartCount(lesson) }}</p>
+          <button v-on:click="removeFromCart(lesson)">Remove</button>
         </div>
       </div>
     </div>
@@ -118,6 +119,16 @@
             }
           }
           return count
+        },
+        removeFromCart(lesson) {
+          const index = this.cart.indexOf(lesson._id)
+          if (index !== -1) {
+            this.cart.splice(index, 1)
+            lesson.space++
+          }
+          if (this.cart.length === 0) {
+            this.showCart = false
+          }
         }
       }
     })
